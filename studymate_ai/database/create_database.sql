@@ -1,0 +1,3 @@
+CREATE USER studymate WITH PASSWORD '1791962';
+CREATE DATABASE studymate_db OWNER studymate;
+GRANT ALL PRIVILEGES ON DATABASE studymate_db TO studymate;

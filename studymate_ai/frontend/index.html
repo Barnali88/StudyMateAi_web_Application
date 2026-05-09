@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyMate AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+<div class="glow-bg glow-a"></div>
+<div class="glow-bg glow-b"></div>
+
+<div id="authOverlay" class="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-logo">✦</div>
+    <h1>StudyMate<span>AI</span></h1>
+    <p class="auth-subtitle">Your private AI study workspace</p>
+
+    <div class="auth-tabs">
+      <button id="loginTab" class="auth-tab active" onclick="setAuthMode('login')">Login</button>
+      <button id="registerTab" class="auth-tab" onclick="setAuthMode('register')">Register</button>
+    </div>
+
+    <form id="authForm" onsubmit="submitAuth(event)">
+      <input id="authName" class="auth-input hidden" type="text" placeholder="Full name" />
+      <input id="authEmail" class="auth-input" type="email" placeholder="Email" required />
+      <input id="authPassword" class="auth-input" type="password" placeholder="Password" required />
+      <button id="authSubmit" class="btn-primary auth-submit" type="submit">Login</button>
+    </form>
+    <p class="auth-note">Each account has private files, chat history, quizzes, and flashcards.</p>
+  </div>
+</div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">✦</div>
+    <span class="brand-name">StudyMate<span class="brand-accent">AI</span></span>
+  </div>
+
+  <div class="model-badge" id="modelBadge" onclick="switchView('settings')">
+    <span class="model-dot"></span>
+    <span id="modelLabel">Loading…</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="nav-btn active" data-view="upload" onclick="switchView('upload')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Upload
+    </button>
+    <button class="nav-btn" data-view="chat" onclick="switchView('chat')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Chat
+    </button>
+    <button class="nav-btn" data-view="summary" onclick="switchView('summary')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Summary
+    </button>
+    <button class="nav-btn" data-view="quiz" onclick="switchView('quiz')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Quiz
+    </button>
+    <button class="nav-btn" data-view="flashcards" onclick="switchView('flashcards')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Flashcards
+    </button>
+    <button class="nav-btn" data-view="settings" onclick="switchView('settings')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.33 1.82V22a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1.82-.33H2a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 8a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 3.3l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-.6 1.65 1.65 0 0 0 .33-1.82V2a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 16 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.37.24.65.59.8 1H22a2 2 0 1 1 0 4h-.09c-.15.41-.43.76-.8 1z"/></svg>
+      Settings
+    </button>
+  </nav>
+
+  <div class="sidebar-files">
+    <div class="files-header">MY NOTES</div>
+    <div id="fileList" class="file-list"><div class="file-empty">No files yet</div></div>
+  </div>
+
+  <div class="user-box">
+    <div id="userName" class="user-name">Not logged in</div>
+    <button class="btn-ghost logout-btn" onclick="logout()">Logout</button>
+  </div>
+</aside>
+
+<main class="main-content">
+  <section class="view active" id="view-upload">
+    <div class="view-header">
+      <h1 class="view-title">Upload Notes</h1>
+      <p class="view-subtitle">Drop your PDF, TXT, or DOCX study materials</p>
+    </div>
+
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+      <div class="upload-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+      <p class="upload-text">Drag & drop or <span class="upload-link">browse</span></p>
+      <p class="upload-hint">PDF · TXT · DOCX · up to 50 MB</p>
+      <input type="file" id="fileInput" accept=".pdf,.txt,.docx" style="display:none" onchange="handleFileSelect(event)" />
+    </div>
+
+    <div id="uploadProgress" class="upload-progress hidden">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <span id="progressLabel">Processing…</span>
+    </div>
+    <div id="uploadedFiles" class="uploaded-cards"></div>
+  </section>
+
+  <section class="view" id="view-chat">
+    <div class="view-header">
+      <h1 class="view-title">Chat with Notes</h1>
+      <div class="file-selector-row">
+        <select id="chatFileSelect" class="file-select" onchange="handleFileDropdownChange(this, 'chat')"><option value="">— select a file —</option></select>
+        <select id="chatSessionSelect" class="file-select small-select" onchange="handleChatSessionChange(this)"><option value="">No chat selected</option></select>
+        <button class="btn-primary" onclick="startNewChat()">New Chat</button>
+        <button class="btn-ghost" onclick="clearChatHistory()">Clear current</button>
+      </div>
+    </div>
+    <div class="chat-window" id="chatWindow"><div class="chat-empty" id="chatEmpty"><div class="chat-empty-icon">💬</div><p>Select a file and ask anything about your notes</p></div></div>
+    <div class="chat-input-row">
+      <textarea id="chatInput" class="chat-textarea" rows="1" placeholder="Ask a question about your notes…" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="btn-send" id="sendBtn" onclick="sendChat()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>
+  </section>
+
+  <section class="view" id="view-summary">
+    <div class="view-header">
+      <h1 class="view-title">Generate Summary</h1>
+      <div class="file-selector-row">
+        <select id="summaryFileSelect" class="file-select" onchange="handleFileDropdownChange(this, 'summary')"><option value="">— select a file —</option></select>
+        <button class="btn-primary" onclick="generateSummary()">Summarise</button>
+      </div>
+    </div>
+    <div id="summaryOutput" class="summary-output"><div class="placeholder-card"><span>✦</span> Select a file and click Summarise.</div></div>
+  </section>
+
+  <section class="view" id="view-quiz">
+    <div class="view-header">
+      <h1 class="view-title">Quiz Generator</h1>
+      <div class="file-selector-row">
+        <select id="quizFileSelect" class="file-select" onchange="handleFileDropdownChange(this, 'quiz')"><option value="">— select a file —</option></select>
+        <div class="input-group"><label>Questions:</label><input type="number" id="quizCount" value="5" min="3" max="15" class="num-input" /></div>
+        <select id="quizHistorySelect" class="file-select small-select" onchange="handleQuizHistoryChange(this)"><option value="">No saved quiz</option></select>
+        <button class="btn-ghost" onclick="newQuiz()">New Quiz</button>
+        <button class="btn-primary" onclick="generateQuiz()">Generate Quiz</button>
+      </div>
+    </div>
+    <div id="quizOutput" class="quiz-output"><div class="placeholder-card"><span>✦</span> Generate a quiz to test your knowledge.</div></div>
+  </section>
+
+  <section class="view" id="view-flashcards">
+    <div class="view-header">
+      <h1 class="view-title">Flashcards</h1>
+      <div class="file-selector-row">
+        <select id="fcFileSelect" class="file-select" onchange="handleFileDropdownChange(this, 'flashcards')"><option value="">— select a file —</option></select>
+        <div class="input-group"><label>Cards:</label><input type="number" id="fcCount" value="10" min="5" max="30" class="num-input" /></div>
+        <button class="btn-primary" onclick="generateFlashcards()">Generate</button>
+      </div>
+    </div>
+    <div id="fcDeck" class="fc-deck hidden">
+      <div id="fcHistoryLabel" class="history-label">Saved flashcards</div>
+      <div class="fc-progress-bar"><div id="fcProgressFill" class="fc-progress-fill"></div></div>
+      <div class="fc-counter" id="fcCounter">1 / 1</div>
+      <div class="fc-card-container"><div class="fc-card" id="fcCard" onclick="flipCard()"><div class="fc-front" id="fcFront"></div><div class="fc-back" id="fcBack" style="display:none"></div><div class="fc-flip-hint" id="fcHint">tap to reveal</div></div></div>
+      <div class="fc-controls"><button class="btn-ghost" onclick="prevCard()">← Prev</button><button class="btn-ghost" onclick="flipCard()">Flip</button><button class="btn-ghost" onclick="nextCard()">Next →</button></div>
+    </div>
+    <div id="fcPlaceholder" class="placeholder-card"><span>✦</span> Generate flashcards to start reviewing.</div>
+  </section>
+
+  <section class="view" id="view-settings">
+    <div class="view-header"><h1 class="view-title">Model Settings</h1><p class="view-subtitle">Switch between your local Ollama model and official Ollama cloud models</p></div>
+    <div class="settings-card">
+      <label class="setting-label">Mode</label>
+      <select id="modelMode" class="file-select" onchange="renderModelOptions()"><option value="local">Local Ollama</option><option value="cloud">Ollama Cloud</option></select>
+      <label class="setting-label">Model</label>
+      <select id="modelSelect" class="file-select"></select>
+      <button class="btn-primary" onclick="saveModelSelection()">Apply Model</button>
+      <p class="settings-help">Cloud mode uses the official Ollama API through your OLLAMA_API_KEY. If your key works, the app loads available cloud models automatically.</p>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast hidden"></div>
+<div id="loader" class="loader-overlay hidden"><div class="loader-box"><div class="loader-spinner"></div><p id="loaderText">Working…</p></div></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
