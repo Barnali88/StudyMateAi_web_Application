@@ -2,29 +2,12 @@
 
 A FastAPI web app for studying uploaded notes with RAG, summaries, quizzes, flashcards, local Ollama, official Ollama Cloud, and user login.
 
-## What changed in this version
-
-- Login and registration are included.
-- Each user only sees their own files, chat history, summaries, quizzes, and flashcards.
-- Local and cloud model switching is available in Settings.
-- Official Ollama Cloud uses `https://ollama.com/api` with `OLLAMA_API_KEY`.
-- The app tries to load all cloud models from `https://ollama.com/api/tags`.
-- Quiz and flashcard generation now uses cleaner study text and validation.
-- If a small local model gives poor JSON, the app uses a fallback generator so you do not get blank questions.
-- PDF extraction and chunking are safer for larger PDFs.
-- Docker is not needed.
-
 ## Setup
 
 Create the PostgreSQL database in pgAdmin or Query Tool:
 
 ```sql
-CREATE USER studymate WITH PASSWORD '1791962';
-CREATE DATABASE studymate_db OWNER studymate;
-GRANT ALL PRIVILEGES ON DATABASE studymate_db TO studymate;
-```
-
-Or use your existing `postgres` user and update `.env`.
+CREATE DATABASE studymate_db;
 
 ## Environment
 
